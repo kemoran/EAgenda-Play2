@@ -1,9 +1,85 @@
+@(loginForm: Form[FrmLogin], registroForm: Form[FrmRegistro])
+@import helper._
+@inputTextConstructor = @{ FieldConstructor(views.html.include.TextFieldConstructorInput.f) }
+
 @css = {
 	<!-- -->
 }
 
 @base("Agenda electrónica", css, js, jsor){
-	<h1> HOLA MUNDO </h1>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8">
+				<h2> Iniciar Sesi&oacute;n </h2>
+				
+				@if(flash.containsKey("userInvalido")) {
+				<div class="alert alert-danger alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<strong>¡Error!</strong> @flash.get("userInvalido").
+				</div>
+				}
+
+				@form(routes.Application.acceso()) {
+					@inputText( loginForm("username"), '_showConstraints -> true, '_label -> "Nombre de usuario", 'class -> "form-control")(handler = inputTextConstructor, implicitly[Lang])
+					@inputPassword( loginForm("password"), '_showConstraints -> true, '_label -> "Contraseña", 'class -> "form-control")(handler = inputTextConstructor, implicitly[Lang])
+					<button type="submit" class="btn btn-default"> Iniciar </button>
+				}
+			</div>
+			<div class="col-md-4">
+				<h2> Registrate </h2>
+				@form(routes.Application.registro()) {
+					<fielset>
+						<legend> Datos del usuario </legend>
+						@inputText( registroForm("nombre"), '_showConstraints -> true, '_label -> "Nombre", 'class -> "form-control")(handler = inputTextConstructor, implicitly[Lang])
+						<!-- RADIO -->
+						<div class="form-group">
+							<label for="genero"> G&eacute;nero </label>
+							<br>
+							<label class="radio-inline">
+								<input type="radio" name="genero"> Masculino
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="genero"> Femenino
+							</label>
+							@if(registroForm("genero").hasErrors){
+							<br>
+							<span class="text-danger">
+								@for(error <- registroForm("genero").errors) {
+									@error.message
+								}
+							</span>
+							}
+						</div>
+						<!-- /RADIO -->
+						@inputText( registroForm("fecha_nacimiento"), '_showConstraints -> true, '_label -> "Fecha de nacimiento", 'class -> "form-control")(handler = inputTextConstructor, implicitly[Lang])
+					</fielset>
+					<fielset>
+						<legend> Datos de la cuenta </legend>
+						@inputText( registroForm("username"), '_showConstraints -> true, '_label -> "Nombre de usuario", 'class -> "form-control")(handler = inputTextConstructor, implicitly[Lang])
+						@inputPassword( registroForm("password"), '_showConstraints -> true, '_label -> "Contraseña", 'class -> "form-control")(handler = inputTextConstructor, implicitly[Lang])
+						<!-- SELECT -->
+						<div class="form-group">
+							<label for="pregunta"> Pregunta secreta </label>
+							<select class="form-control" name="pregunta">
+								<option value="1"> 1 </option>
+								<option value="2"> 2 </option>
+								<option value="3"> 3 </option>
+							</select>
+							<span class="text-danger">
+								@for(error <- registroForm("pregunta").errors) {
+									@error.message
+								}
+							</span>
+						</div>
+						<!-- /SELECT -->
+						@inputText( registroForm("respuesta"), '_showConstraints -> true, '_label -> "Respuesta", 'class -> "form-control")(handler = inputTextConstructor, implicitly[Lang])
+					</fielset>
+					<button type="submit" class="btn btn-default"> Registrar </button>
+				}
+				
+			</div>
+		</div>
+	</div>
 }
 
 @js = {

@@ -1,0 +1,11 @@
+@(elements: helper.FieldElements)
+
+<div class="form-group">
+	<label for="@elements.id"> @elements.label  </label>
+	@elements.input
+	@if(elements.hasErrors){
+	<span class="text-danger">
+		@elements.errors.mkString(", ")
+	</span>
+	}
+</div>

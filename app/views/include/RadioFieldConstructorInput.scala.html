@@ -1,0 +1,51 @@
+@(elements: helper.FieldElements)
+@*@(field: play.api.data.Field, options: Seq[(String,String)], args: (Symbol,Any)*)(implicit handler: FieldConstructor, lang: play.api.i18n.Lang)*@
+
+@*
+<div class="form-group">
+	<label for="@elements.id"> @elements.label </label>
+	<br>
+	@elements.options.map { v =>
+	<label class="radio-inline">
+		<input type="radio" name="@name" value="@v._1" @toHtmlArgs(htmlArgs)> @v._2
+	</label>
+	}
+	@if(elements.hasErrors){
+	<span class="text-danger">
+		@elements.errors.mkString(", ")
+	</span>
+	}
+</div>
+*@
+
+@*
+@(field: play.api.data.Field, options: Seq[(String,String)], args: (Symbol,Any)*)(implicit handler: FieldConstructor, lang: play.api.i18n.Lang)
+
+@input(field, args:_*) { (id, name, value, htmlArgs) =>
+	<span class="buttonset" id="@id">
+	@options.map { v =>
+		<input type="radio" id="@(id)_@v._1" name="@name" value="@v._1" @(if(value == Some(v._1)) "checked" else "") @toHtmlArgs(htmlArgs)>
+		<label for="@(id)_@v._1">@v._2</label>
+		}
+		</span>
+}
+*@
+
+@*
+@input(field, args.map{ x => if(x._1 == '_label) '_name -> x._2 else x }:_*) { (id, name, value, htmlArgs) =>
+	<div class="form-group">
+		<label for="@elements.id"> @elements.label </label>
+		<br>
+		@options.map { v =>
+		<label class="radio-inline">
+			<input type="radio" name="@name" value="@v._1" @toHtmlArgs(htmlArgs)> @v._2
+		</label>
+		}
+		@if(elements.hasErrors){
+		<span class="text-danger">
+			@elements.errors.mkString(", ")
+		</span>
+		}
+	</div>
+}
+*@
